@@ -91,7 +91,7 @@ app.post("/login", function(req, resp){ //root dir
 
 app.get("/", function(req, resp){ //root dir
     // console.log(req.session.loggedin);
-    console.log(req.session.username);
+    // console.log(req.session.username);
     if (!req.session.loggedin) {
     // var body = "<pre> SELAMAT DATANG </pre><p><h3></h3></p>"
     //         + " <a href='/login' >KLIK LOGIN</a> "
@@ -109,8 +109,11 @@ app.get("/", function(req, resp){ //root dir
 });
 
 app.get("/logout", function(req, resp){ //root dir
-    req.session.username = null
-    res.redirect('/login');
+    console.log(req.session.loggedin);
+    console.log(req.session.username);
+    req.session.username = null;
+    req.session.loggedin = null;
+    resp.redirect('/login');
 });
 
 app.listen(port, host);
