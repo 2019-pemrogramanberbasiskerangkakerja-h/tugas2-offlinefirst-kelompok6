@@ -82,6 +82,8 @@ app.post("/login", function(req, resp){ //root dir
             // console.log(user_name);
             var password = post_data["password"];
             const query = `SELECT * FROM user WHERE username = ? and password = ?`;        
+            const query2 = `INSERT INTO UserLog (username , date)
+               VALUES (? , ?)`;
             // console.log(password);
 
             db.get(query , user_name, password ,function (err , row) {
@@ -95,6 +97,20 @@ app.post("/login", function(req, resp){ //root dir
                 req.session.loggedin = true;
                 req.session.username = user_name;
                 console.log(req.session.loggedin);
+
+                const query2 = `INSERT INTO UserLogs(username , date) VALUES (? , ?)`;
+                var nama = req.session.username;
+                var date = Date() ;
+
+                 db.run(query2, nama, date ,function (err , row) {
+                          if (err) {   
+                            console.log("gagal");
+                            
+                          }else{
+                            console.log("berhasil");
+                          }
+                
+        });
 
                  resp.redirect('/sukseslogin');
               }
