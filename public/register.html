@@ -181,7 +181,7 @@ form:after {
 }
 #username { background-position: 10px 10px !important }
 #password { background-position: 10px -53px !important }
-#content form input[type="button"] {
+#content form input[type="submit"] {
     background: rgb(254,231,154);
     background: -moz-linear-gradient(top,  rgba(254,231,154,1) 0%, rgba(254,193,81,1) 100%);
     background: -webkit-linear-gradient(top,  rgba(254,231,154,1) 0%,rgba(254,193,81,1) 100%);
@@ -210,7 +210,7 @@ form:after {
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     width: 120px;
 }
-#content form input[type="button"]:hover {
+#content form input[type="submit"]:hover {
     background: rgb(254,193,81);
     background: -moz-linear-gradient(top,  rgba(254,193,81,1) 0%, rgba(254,231,154,1) 100%);
     background: -webkit-linear-gradient(top,  rgba(254,193,81,1) 0%,rgba(254,231,154,1) 100%);
@@ -264,39 +264,22 @@ form:after {
     background-position: 0 -135px;
     color: #00aeef;
 }
-
-.button2{
-    background-color: #008CBA;
-    font-size: 24px;
-    padding: 32px 16px;
-    border-radius: 12px;
-    color: white;
-   /* border: 2px solid #f44336;*/
-    -webkit-transition-duration: 0.4s; 
-    transition-duration: 0.4s;
-}
-
-.button2:hover {
-    background-color: #A9A9A9; 
-    color: black;
-}
   </style>
-
 </head>
 <body>
  <div class="container">
     <section id="content">
         <form method="POST" action="/">
-            <h1>Login Status</h1>
-            <div class="button2">
-                <p>Login Success!</p>
+            <h1>Register Form</h1>
+            <div>
+                <input type="text" placeholder="Username" required="" id="username" />
             </div>
-            <div> 
-                <a href="home.html"><input type="button" value="Log Out"/></a>
+            <div>
+                <input type="password" placeholder="Password" required="" id="password" />
             </div>
-           <br>
-           <br>
-           <a href="">
+            <div>
+                <input type="submit" value="Register" />
+            </div>
         </form><!-- form -->
         
     </section><!-- content -->

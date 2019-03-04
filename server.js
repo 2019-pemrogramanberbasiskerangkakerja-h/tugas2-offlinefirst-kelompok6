@@ -88,17 +88,23 @@ app.get("/", function(req, resp){ //root dir
     // console.log(req.session.loggedin);
     console.log(req.session.username);
     if (!req.session.loggedin) {
-    var body = "<pre> SELAMAT DATANG </pre><p><h3></h3></p>"
-            + " <a href='/login' >KLIK LOGIN</a> "
+       resp.sendFile(__dirname + '/public/home.html');
+    }else{
+       resp.redirect('/');
+    }
+
+    // var body = "<pre> SELAMAT DATANG </pre><p><h3></h3></p>"
+    //         + " <a href='/login' >KLIK LOGIN</a> "
  
-         resp.write(body);
-         // resp.end();     
-       } else{
-       var body = "<pre> SELAMAT DATANG </pre></p>"
-                  + req.session.username
-         resp.write(body);
-         // resp.end();    
-       }
+    //      resp.write(body);
+    //      // resp.end();     
+    //    } else{
+    //    var body = "<pre> SELAMAT DATANG </pre></p>"
+    //               + req.session.username
+    //      resp.write(body);
+    //      // resp.end();    
+
+       
 
 });
 
