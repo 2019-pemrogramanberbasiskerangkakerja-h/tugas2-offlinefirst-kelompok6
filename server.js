@@ -29,6 +29,14 @@ app.get("/login", function(req, resp){ //root dir
   }
 });
 
+app.get("/register", function(req, resp){ //root dir
+  if(!req.session.loggedin){
+    resp.sendFile(__dirname + '/public/register.html');
+  }else{
+    resp.redirect('/');
+  }
+});
+
 app.get("/home", function(req, resp){ //root dir
     resp.sendFile(__dirname + '/public/home.html');
 });
@@ -85,6 +93,80 @@ app.post("/login", function(req, resp){ //root dir
                 
             });
         });
+    }
+});
+
+app.post("/register", function(req, resp){ //root dir
+    const query = `INSERT INTO user (username, password)
+               VALUES ('?', '?')`;
+    var query_string = require('querystring');
+    
+    if (req.method == 'POST') {
+       var req_body = '';
+        req.on('data', function (data) {
+            req_body += data;
+            // If the POST data is too much then destroy the connection to avoid attack.
+            // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+            if (req_body.length > 1e6)
+                req.connection.destroy();
+        });
+
+              req.on('end', function () {
+            var post_data = query_string.parse(req_body);
+            var user_name = post_data["user_name"];
+            // console.log(user_name);
+            var password = post_data["password"];
+            const query = `INSERT INTO user (username , password)
+               VALUES (? , ?)`;
+            // console.log(password);
+
+            db.get(query , user_name, password ,function (err , row) {
+              if (err) {           
+                     req.user_name = user_name;
+                     req.password = password;
+                  resp.redirect('/gagalogin');
+
+               resp.end();
+              }else{
+                // req.session.loggedin = true;
+                // req.session.username = user_name;
+                console.log(req.session.loggedin);
+
+                 resp.redirect('/');
+              }
+                
+            });
+        });
+     
+
+        // req.on('end', function () {
+        //   // Parse post data from request body, return a JSON string contains all post data.
+        //     var post_data = query_string.parse(req_body);
+        //     // Get user name from post data.
+        //     var user_name = post_data["user_name"];
+        //     console.log(user_name);
+        //     // Get password from post data.
+        //     var password = post_data["password"];
+        //     // If user name and password is correct.
+        //     console.log(password);
+
+        //     const query = `INSERT INTO user (username , password)
+        //        VALUES (? , ?)`;
+
+        //     db.run(query, [user_name , password] , function (err , row) {
+        //       if (err) throw err;
+        //       console.log("registrasi berhasil");
+        //           resp.writeHead(200, {'Content-Type':'text/html'});
+
+        //             var page_title = "Register Success";
+
+        //             var page_menu = http_util.pageMenu();
+
+        //             var page_content = "User info registration success.";
+
+        //     });
+         
+        // });
     }
 });
 
