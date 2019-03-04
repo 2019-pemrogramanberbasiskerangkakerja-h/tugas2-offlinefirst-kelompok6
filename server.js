@@ -38,7 +38,15 @@ app.get("/register", function(req, resp){ //root dir
 });
 
 app.get("/home", function(req, resp){ //root dir
-    resp.sendFile(__dirname + '/public/home.html');
+    if(!req.session.loggedin){
+          resp.sendFile(__dirname + '/public/home.html');
+
+  }else{
+    req.session.username;
+     resp.sendFile(__dirname + '/public/sukseshome.html');
+
+  }
+
 });
 
 
@@ -171,22 +179,8 @@ app.post("/register", function(req, resp){ //root dir
 });
 
 
-app.get("/", function(req, resp){ //root dir
-    // console.log(req.session.loggedin);
-    // console.log(req.session.username);
-    if (!req.session.loggedin) {
-    // var body = "<pre> SELAMAT DATANG </pre><p><h3></h3></p>"
-    //         + " <a href='/login' >KLIK LOGIN</a> "
- 
-    //      resp.write(body);
-         // resp.end();
-         resp.redirect('/home');     
-       } else{
-       var body = "<pre> SELAMAT DATANG </pre></p>"
-                  + req.session.username
-         resp.write(body);
-         // resp.end();    
-       }
+app.get("/", function(req, resp){ 
+    resp.redirect('/home');     
 
 });
 
