@@ -7,9 +7,10 @@ var session = require('express-session');
 var query_string = require('querystring');
 var path = require("path");
 const db    = require('./Database/db');
-
+// var internetAvailable = require("internet-available");
 var host = "127.0.0.1";
 var port = 8082;
+var isOnline = require('is-online');
 
 // app.use(express.static(__dirname + "/public")); //use static files in ROOT/public folder
 var app = express();
@@ -67,6 +68,16 @@ app.get("/gagalogin", function(req, resp){ //root dir
 });
 
 app.post("/login", function(req, resp){ //root dir
+       
+    // isOnline().then(online => {
+    //   if(online){
+    //        console.log("Internet available di login");
+    //      }else{
+    //         console.log("No internet di login");
+    //      }
+    // });
+
+
        if (req.method == 'POST') {
        var req_body = '';
         req.on('data', function (data) {
@@ -76,14 +87,16 @@ app.post("/login", function(req, resp){ //root dir
                 req.connection.destroy();
         });
 
+
+
         req.on('end', function () {
             var post_data = query_string.parse(req_body);
             var user_name = post_data["user_name"];
             // console.log(user_name);
             var password = post_data["password"];
             const query = `SELECT * FROM user WHERE username = ? and password = ?`;        
-            const query2 = `INSERT INTO UserLog (username , date)
-               VALUES (? , ?)`;
+            // const query2 = `INSERT INTO UserLog (username , date)
+            //    VALUES (? , ?)`;
             // console.log(password);
 
             db.get(query , user_name, password ,function (err , row) {
@@ -98,19 +111,41 @@ app.post("/login", function(req, resp){ //root dir
                 req.session.username = user_name;
                 console.log(req.session.loggedin);
 
-                const query2 = `INSERT INTO UserLogs(username , date) VALUES (? , ?)`;
+                const query2 = `INSERT INTO UserLogs(username , date , status ) VALUES (? , ? , ?)`;
                 var nama = req.session.username;
                 var date = Date() ;
+                var status;
 
-                 db.run(query2, nama, date ,function (err , row) {
+                isOnline().then(online => {
+                  if(online){
+                       status = 1;
+                       console.log("Internet available");                       
+                       console.log("status 1");
+                        db.run(query2, nama, date , status ,function (err , row) {
                           if (err) {   
-                            console.log("gagal");
-                            
+                            console.log("gagal");  
                           }else{
                             console.log("berhasil");
                           }
                 
-        });
+                        });
+
+                     }else{
+                       status = 0;
+                        console.log("No internet");
+                       console.log("status 0");
+                        db.run(query2, nama, date , status ,function (err , row) {
+                          if (err) {   
+                            console.log("gagal");  
+                          }else{
+                            console.log("berhasil");
+                          }     
+                        });
+
+                     }
+                });
+
+                
 
                  resp.redirect('/sukseslogin');
               }
@@ -124,6 +159,8 @@ app.post("/register", function(req, resp){ //root dir
     const query = `INSERT INTO user (username, password)
                VALUES ('?', '?')`;
     var query_string = require('querystring');
+
+
     
     if (req.method == 'POST') {
        var req_body = '';
@@ -144,6 +181,8 @@ app.post("/register", function(req, resp){ //root dir
                VALUES (? , ?)`;
             // console.log(password);
 
+
+
             db.get(query , user_name, password ,function (err , row) {
               if (err) {           
                      req.user_name = user_name;
@@ -161,42 +200,26 @@ app.post("/register", function(req, resp){ //root dir
                 
             });
         });
-     
-
-        // req.on('end', function () {
-        //   // Parse post data from request body, return a JSON string contains all post data.
-        //     var post_data = query_string.parse(req_body);
-        //     // Get user name from post data.
-        //     var user_name = post_data["user_name"];
-        //     console.log(user_name);
-        //     // Get password from post data.
-        //     var password = post_data["password"];
-        //     // If user name and password is correct.
-        //     console.log(password);
-
-        //     const query = `INSERT INTO user (username , password)
-        //        VALUES (? , ?)`;
-
-        //     db.run(query, [user_name , password] , function (err , row) {
-        //       if (err) throw err;
-        //       console.log("registrasi berhasil");
-        //           resp.writeHead(200, {'Content-Type':'text/html'});
-
-        //             var page_title = "Register Success";
-
-        //             var page_menu = http_util.pageMenu();
-
-        //             var page_content = "User info registration success.";
-
-        //     });
-         
-        // });
     }
 });
 
 
 app.get("/", function(req, resp){ 
     resp.redirect('/home');     
+
+    // internetAvailable().then(function(){
+    //     console.log("Internet available");
+    // }).catch(function(){
+    //     console.log("No internet");
+    // })
+
+    isOnline().then(online => {
+      if(online){
+           console.log("Internet available");
+         }else{
+            console.log("No internet");
+         }
+    });
 
 });
 
