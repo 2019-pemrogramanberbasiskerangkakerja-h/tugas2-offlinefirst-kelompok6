@@ -1,0 +1,21 @@
+{
+  "name": "tugas2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "internet-available": "^1.0.0",
+    "is-online": "^8.1.0",
+    "mysql": "^2.16.0",
+    "oracledb": "^3.1.2",
+    "sqlite3": "^4.0.6"
+  }
+}
